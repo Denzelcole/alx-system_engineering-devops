@@ -1,6 +1,6 @@
-#this puppet script installs flask from pip3
+# kills the process 'killmenow'
 
-package { 'flask':
-  ensure   => '2.1.0',
-  provider => 'pip3',
+exec { 'kill':
+    command => 'pkill -f killmenow',
+    path    => '/usr/bin/',
 }
