@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
-# Configure the Nginx server so that it handles a 404 page.
+# Script that installs Nginx server, redirects /redirect_me and customizes 404 not found
 
-sudo apt update -y
-sudo apt install -y nginx
+sudo apt-get -y update
+sudo apt-get -y install nginx
 sudo ufw allow 'Nginx HTTP'
-echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html
-echo "Ceci n'est pas une page" | sudo tee /usr/share/nginx/html/custom_404.html
-
-redirect="server_name _;\n\trewrite ^\/redirect_me google.com permanent;"
-not_found="\n\terror_page 404 \/custom_404.html;\n\tlocation = \/custom_404.html {\n\t\troot \/usr\/share\/nginx\/html;\n\t\tinternal;\n\t}"
-sudo sed -i "s/server_name _;/$redirect$not_found/" /etc/nginx/sites-enabled/default
-
+echo "This page is not found" | sudo tee /usr/share/nginx/html/404.html
+newlines="\\\terror_page 404 /404.html;\n\tlocation = /404.html {\n\t\troot /usr/share/nginx/html;\n\t\tinternal;\n\t}"
+sudo sed -i "27i $newlines" /etc/nginx/sites-available/default
 sudo service nginx restart
